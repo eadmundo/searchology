@@ -1,0 +1,1 @@
+web: chaussette --host $WEBAPP_HOST --port $WEBAPP_PORT --backend meinheld app:app

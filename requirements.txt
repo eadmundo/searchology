@@ -1,0 +1,8 @@
+topia.termextract==1.1.0
+git+git://github.com/eadmundo/python-boilerpipe.git#egg=boilerpipe
+Scrapy==0.16.4
+SQLAlchemy==0.8.1
+psycopg2==2.5
+alembic==0.5.0
+-e git+git://github.com/nickstenning/honcho.git#egg=honcho
+celery==3.0.19
