@@ -1,8 +1,17 @@
 from scrapy.contrib.spiders import CrawlSpider, Rule
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 from boilerpipe.extract import Extractor
-import db
-from db import models
+from db import models, session
+import pyes
+import hashlib
+import atexit
+
+es = pyes.ES('localhost:9200')
+
+
+@atexit.register
+def refresh_es():
+    es.refresh()
 
 
 class SearchologySpider(CrawlSpider):
@@ -10,7 +19,7 @@ class SearchologySpider(CrawlSpider):
     name = 'searchologyspider'
 
     def __init__(self, sid=None):
-        self.session = db.session
+        self.session = session
         self.sid = sid
         self.name = self.domain
         self.allowed_domains = [self.domain]
@@ -18,7 +27,7 @@ class SearchologySpider(CrawlSpider):
         self.rules = (
             Rule(
                 SgmlLinkExtractor(
-                    #allow='.*intro\/overview\.html'
+                    # allow='.*intro\/overview\.html'
                 ),
                 callback='parse_item',
                 follow=False
@@ -30,7 +39,7 @@ class SearchologySpider(CrawlSpider):
     def domain(self):
         if self.site_search is not None:
             return self.site_search.domain
-        return 'djangodocs.dev'
+        return 'docs.djangoproject.dev'
 
     @property
     def site_search(self):
@@ -39,4 +48,10 @@ class SearchologySpider(CrawlSpider):
 
     def parse_item(self, response):
         extractor = Extractor(extractor='ArticleExtractor', html=response.body)
-        print extractor.getText().encode('utf-8')
+        text = extractor.getText().encode('utf-8')
+        page = {
+            "url": response.url,
+            "text": text,
+        }
+        _id = hashlib.md5(response.url).hexdigest()
+        es.index(page, index=self.domain, doc_type='page', id=_id, bulk=True)

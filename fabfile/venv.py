@@ -18,12 +18,6 @@ def build(venv_path='env'):
         # annoyingly, pip prints errors to stdout (instead of stderr), so we
         # have to check the return code and output only if there's an error.
         with settings(warn_only=True):
-            pip = do('%s/bin/pip install -r requirements.txt' % venv_path, capture=True)
-        if pip.failed:
-            print(red(pip))
-            abort("pip exited with return code %i" % pip.return_code)
-
-        with settings(warn_only=True):
             pip = do('%s/bin/pip install -r requirements-dev.txt' % venv_path, capture=True)
         if pip.failed:
             print(red(pip))

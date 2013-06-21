@@ -18,6 +18,7 @@ class common {
     include libxslt
     include postgresql-dev
     include postgresql
+    include elasticsearch
 
     # create the database
     postgresql::database { 'searchology':

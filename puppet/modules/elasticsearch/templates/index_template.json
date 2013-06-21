@@ -1,0 +1,50 @@
+{
+    "index_template": {
+        "template": "*",
+        "settings": {
+            "index": {
+                "number_of_shards" : 1,
+                "analysis": {
+                    "analyzer": {
+                        "urlanalyzer": {
+                            "type": "custom",
+                            "tokenizer": "uax_url_email",
+                            "filter": ["standard", "lowercase", "custom_stemmer", "custom_stop", "length_3"]
+                        }
+                    },
+                    "filter": {
+                        "length_3": {
+                            "type": "length",
+                            "min": "3"
+                        },
+                        "custom_stop": {
+                            "type": "stop",
+                            "stopwords_path": "<%= @dest %>/config/stopwords.txt"
+                        },
+                        "custom_stemmer": {
+                            "type": "stemmer",
+                            "language": "possessive_english"
+                        }
+                    }
+                }
+            }
+        },
+        "mappings": {
+            "pages": {
+                "_all" : {"enabled" : false},
+                "_index" : { "enabled" : true },
+                "properties": {
+                    "text": {
+                        "analyzer": "urlanalyzer",
+                        "type": "string",
+                        "index": "analyzed"
+                    },
+                    "url": {
+                        "type": "string",
+                        "index": "not_analyzed"
+                    }
+                }
+            }
+        }
+    }
+}

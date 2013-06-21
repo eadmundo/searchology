@@ -1,0 +1,7 @@
+ES_USER="elasticsearch"
+ES_GROUP="elasticsearch"
+ES_HEAP_SIZE="1024m"
+ES_JAVA_OPTS="-Des.config=/etc/elasticsearch/elasticsearch.yml"
+ES_INCLUDE="/usr/share/elasticsearch.in.sh"
+
+export ES_HEAP_SIZE ES_JAVA_OPTS ES_INCLUDE ES_USER ES_GROUP
