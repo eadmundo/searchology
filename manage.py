@@ -1,11 +1,8 @@
-import os
-import subprocess
-from app import app
+from app import create_app
 from flask import current_app
 from flask.ext.script import Shell, Manager, Server
-#from flask.ext.assets import ManageAssets
 
-manager = Manager(app)
+manager = Manager(create_app)
 
 
 def _make_shell_context():
