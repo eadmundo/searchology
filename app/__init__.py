@@ -1,6 +1,7 @@
 import os
 from flask import Flask
 from app.extensions.database import database
+from app.extensions.toolbar import configure_toolbar
 from app.extensions.login import login_manager, current_user
 # from app.helpers import Pagination
 
@@ -19,6 +20,7 @@ def configure_extensions(app):
     """
     database.init_app(app)
     login_manager.init_app(app)
+    configure_toolbar(app)
     # principal.init_app(app)
 
 
