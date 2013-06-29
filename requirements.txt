@@ -12,3 +12,7 @@ Flask-Login==0.2.3
 Flask-Principal==0.4.0
 Flask-Script==0.5.3
 Flask-WTF==0.8.3
+nltk==2.0.4
+py-bcrypt==0.3
+Flask-SQLAlchemy==0.16
+Flask-DebugToolbar==0.8.0
