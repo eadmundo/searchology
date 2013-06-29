@@ -1,0 +1,39 @@
+{% macro errors_top(form) %}
+    {% if form.errors and not form.errors.hide_field_errors %}
+        <div class="has_errors">
+            Oops we found some issues with your form. Please review the fields highlighted below:
+        </div>
+    {% endif %}
+{% endmacro %}
+
+{% macro errors_for(field) %}
+    {% if field.errors %}
+        <ul class="errors">
+        {% for error in field.errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endmacro %}
+
+{% macro render_field(field, label=None) %}
+    <div class="form_row{% if field.errors %} has_errors{% endif %}{% if 'clear' in kwargs %} clear{% endif %}">
+        <label for="{{ field.id }}"{% if field.flags.required %} class="required" title="This field is required"{% endif %}>
+            {% if label %}{{ label|e }}{% else %}{{ field.label.text|e }}{% endif %}{% if field.flags.required %}<span>*</span>{% endif %}
+        </label>
+        {{ field(**kwargs) }}
+        {{ errors_for(field) }}
+    </div>
+{% endmacro %}
+
+{% macro render_checkbox_field(field, label=None) %}
+    <div class="form_row{% if field.errors %} has_errors{% endif %}{% if 'clear' in kwargs %} clear{% endif %}">
+        {{ field(**kwargs) }}
+        {% if not label %}
+            {{ field.label }}
+        {% else %}
+            <label for="{{ field.id }}">{{ label }}</label>
+        {% endif %}
+        {{ errors_for(field) }}
+    </div>
+{% endmacro %}

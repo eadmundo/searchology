@@ -7,22 +7,10 @@
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <!-- Le styles -->
-        {% assets 'css_main' -%}
-        <link rel="stylesheet{% if ASSET_URL.endswith('.less') %}/less{% endif %}" href="{{ ASSET_URL }}" media="screen" />
-        {% endassets %}
-
-        <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
-        <!--[if lt IE 9]>
-            <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-        <![endif]-->
-        <!-- where are my mustaches?! -->
-        {{ mustache_templates }}
     </head>
 
     <body>
 
-        <h1><a href="{{ url_for('blog.post_render') }}">Blog Home</a></h1>
         {% block header %}
 
         {% endblock %}
@@ -38,15 +26,6 @@
         {% block content %}
         {% endblock %}
 
-        {% assets 'js_main' -%}
-        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
-        {% endassets %}
-
-        {%- if debug -%}
-            {% assets 'js_dev' -%}
-            <script type="text/javascript" src="{{ ASSET_URL }}"></script>
-            {% endassets -%}
-        {% endif %}
         {% block extrafoot %}{% endblock %}
     </body>
 </html>

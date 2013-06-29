@@ -1,5 +1,6 @@
 from scrapy.contrib.spiders import CrawlSpider, Rule
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
+from bs4 import BeautifulSoup
 from boilerpipe.extract import Extractor
 from db import models, session
 import pyes
@@ -47,11 +48,14 @@ class SearchologySpider(CrawlSpider):
             models.SiteSearch).filter_by(id=self.sid).first()
 
     def parse_item(self, response):
-        extractor = Extractor(extractor='ArticleExtractor', html=response.body)
+        html = response.body
+        soup = BeautifulSoup(html)
+        extractor = Extractor(extractor='ArticleExtractor', html=html)
         text = extractor.getText().encode('utf-8')
         page = {
             "url": response.url,
             "text": text,
+            "title": soup.title.string,
         }
         _id = hashlib.md5(response.url).hexdigest()
         es.index(page, index=self.domain, doc_type='page', id=_id, bulk=True)

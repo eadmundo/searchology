@@ -1,7 +1,7 @@
 from flask import redirect, request, url_for, flash, render_template
 from flask.ext.login import current_user, login_user, logout_user
 from app.blueprints.users.forms import LoginForm
-from app.blueprints.api import blueprint
+from app.blueprints.users import blueprint
 from db.models import Users
 
 

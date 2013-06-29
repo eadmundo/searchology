@@ -1,6 +1,7 @@
 import rawes
 from flask import make_response, jsonify, request, abort
 from app.blueprints.api import blueprint
+from page_snippet import SearchQuerySnippet
 
 
 es = rawes.Elastic('localhost:9200')
@@ -8,6 +9,7 @@ es = rawes.Elastic('localhost:9200')
 
 def auth(username, token):
     return True
+    # return False
 
 
 def search_results(index, q, count, page):
@@ -21,16 +23,38 @@ def search_results(index, q, count, page):
                 '_all': q
             }
         }
-    return es[index]['page']._search.get(data={
+
+    raw_data = es[index]['page']._search.get(data={
         'version': True,
         'query': query,
-        'fields': ['url'],
+        'fields': ['title', 'url', 'text'],
         'size': count,
         'from': (int(page) * int(count)) - int(count),
         'sort': {
             '_score': 'desc'
         }
     })
+
+    results = []
+
+    # print raw_data
+
+    for hit in raw_data['hits']['hits']:
+        text = hit['fields']['text']
+        if len(q):
+            snippet = SearchQuerySnippet(text, q, 170)()
+        results.append({
+            # '_id': hit['_id'],
+            'score': hit['_score'],
+            'title': hit['fields']['title'],
+            'url': hit['fields']['url'],
+            'snippet': snippet,
+        })
+
+    return {
+        'total': raw_data['hits']['total'],
+        'results': results,
+    }
 
 
 @blueprint.errorhandler(401)
