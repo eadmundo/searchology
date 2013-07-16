@@ -42,7 +42,8 @@ def search_results(index, q, count, page):
     for hit in raw_data['hits']['hits']:
         text = hit['fields']['text']
         if len(q):
-            snippet = SearchQuerySnippet(text, q, 170)()
+            sqs = SearchQuerySnippet(text, q, 170)
+            snippet = sqs.snippet
         results.append({
             # '_id': hit['_id'],
             'score': hit['_score'],

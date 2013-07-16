@@ -16,4 +16,5 @@ nltk==2.0.4
 py-bcrypt==0.3
 Flask-SQLAlchemy==0.16
 Flask-DebugToolbar==0.8.0
-Flask-OAuthlib==0.2.0
+Flask-OAuthlib==0.3.0
+beautifulsoup4==4.2.1

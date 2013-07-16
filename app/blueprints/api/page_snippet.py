@@ -2,6 +2,7 @@ from nltk.tokenize.punkt import PunktSentenceTokenizer
 from nltk.tokenize import WhitespaceTokenizer
 from collections import OrderedDict
 from operator import itemgetter
+import re
 
 
 class SearchQuerySnippet(object):
@@ -52,13 +53,33 @@ class SearchQuerySnippet(object):
             }
         return self._first_sentence
 
-    def __call__(self):
-        if len(self.first_sentence['text']) > self.max_length:
-            return self.truncate_sentence(
-                self.first_sentence['text'], self.max_length)
-        else:
-            start = self.text[
-                self.first_sentence['span'][0]:self.last_sentence['span'][0]-1]
-            end = self.truncate_sentence(
-                self.last_sentence['text'], self.max_length - len(start))
-            return (start + ' ' + end).strip()
+    @property
+    def highlighted_snippet(self):
+        if not hasattr(self, '_highlighted_snippet'):
+            self._highlighted_snippet = ''
+            regex = re.compile(r"\b{}\b".format(self.query_string), re.I)
+            i = 0
+            for m in regex.finditer(self.snippet):
+                self._highlighted_snippet += ''.join([
+                    self.snippet[i:m.start()],
+                    "<strong>",
+                    self.snippet[m.start():m.end()],
+                    "</strong>"
+                ])
+                i = m.end()
+            self._highlighted_snippet = "".join([self._highlighted_snippet, self.snippet[m.end():]])
+        return self._highlighted_snippet
+
+    @property
+    def snippet(self):
+        if not hasattr(self, '_snippet'):
+            if len(self.first_sentence['text']) > self.max_length:
+                self._snippet = self.truncate_sentence(
+                    self.first_sentence['text'], self.max_length)
+            else:
+                start = self.text[
+                    self.first_sentence['span'][0]:self.last_sentence['span'][0]-1]
+                end = self.truncate_sentence(
+                    self.last_sentence['text'], self.max_length - len(start))
+                self._snippet = (start + ' ' + end).strip()
+        return self._snippet
