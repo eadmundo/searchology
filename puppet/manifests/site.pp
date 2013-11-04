@@ -19,6 +19,7 @@ class common {
     include postgresql-dev
     include postgresql
     include elasticsearch
+    include redis
 
     # create the database
     postgresql::database { 'searchology':
