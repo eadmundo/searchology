@@ -14,7 +14,7 @@ def build(venv_path='env'):
     """Build or update the virtualenv."""
     with settings(hide('stdout')):
         print(cyan('\nUpdating venv, installing packages...'))
-        do('[ -e %s ] || virtualenv %s --distribute --no-site-packages' % (venv_path, venv_path))
+        do('[ -e %s ] || virtualenv %s --distribute --system-site-packages' % (venv_path, venv_path))
         # annoyingly, pip prints errors to stdout (instead of stderr), so we
         # have to check the return code and output only if there's an error.
         with settings(warn_only=True):
