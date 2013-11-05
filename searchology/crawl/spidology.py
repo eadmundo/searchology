@@ -2,7 +2,7 @@ from scrapy.contrib.spiders import CrawlSpider, Rule
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 from bs4 import BeautifulSoup
 from boilerpipe.extract import Extractor
-from db import models, session
+from searchology.db import models, session
 import pyes
 import hashlib
 import atexit

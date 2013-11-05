@@ -12,7 +12,7 @@ class Users(Base):
     id = Column(Integer, primary_key=True)
     username = Column(String(80), unique=True, nullable=False)
     passphrase_hash = Column(String(60), nullable=False)
-    domains = relationship('SiteSearch', backref='users')
+    # domains = relationship('SiteSearch', backref='users')
 
     def __repr__(self):
         return '<User %r>' % self.username

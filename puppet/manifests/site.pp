@@ -20,6 +20,8 @@ class common {
     include postgresql
     include elasticsearch
     include redis
+    include nginx
+    include nginx::site::docs
 
     # create the database
     postgresql::database { 'searchology':

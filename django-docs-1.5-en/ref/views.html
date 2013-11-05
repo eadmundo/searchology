@@ -1,0 +1,215 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Built-in Views &mdash; Django 1.5.4 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.5.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Django 1.5.4 documentation" href="../index.html" />
+    <link rel="up" title="API Reference" href="index.html" />
+    <link rel="next" title="Meta-documentation and miscellany" href="../misc/index.html" />
+    <link rel="prev" title="Validators" href="validators.html" />
+ 
+<script type="text/javascript" src="../templatebuiltins.js"></script>
+<script type="text/javascript">
+(function($) {
+    if (!django_template_builtins) {
+       // templatebuiltins.js missing, do nothing.
+       return;
+    }
+    $(document).ready(function() {
+        // Hyperlink Django template tags and filters
+        var base = "templates/builtins.html";
+        if (base == "#") {
+            // Special case for builtins.html itself
+            base = "";
+        }
+        // Tags are keywords, class '.k'
+        $("div.highlight\\-html\\+django span.k").each(function(i, elem) {
+             var tagname = $(elem).text();
+             if ($.inArray(tagname, django_template_builtins.ttags) != -1) {
+                 var fragment = tagname.replace(/_/, '-');
+                 $(elem).html("<a href='" + base + "#" + fragment + "'>" + tagname + "</a>");
+             }
+        });
+        // Filters are functions, class '.nf'
+        $("div.highlight\\-html\\+django span.nf").each(function(i, elem) {
+             var filtername = $(elem).text();
+             if ($.inArray(filtername, django_template_builtins.tfilters) != -1) {
+                 var fragment = filtername.replace(/_/, '-');
+                 $(elem).html("<a href='" + base + "#" + fragment + "'>" + filtername + "</a>");
+             }
+        });
+    });
+})(jQuery);
+</script>
+
+  </head>
+  <body>
+
+    <div class="document">
+  <div id="custom-doc" class="yui-t6">
+    <div id="hd">
+      <h1><a href="../index.html">Django 1.5.4 documentation</a></h1>
+      <div id="global-nav">
+        <a title="Home page" href="../index.html">Home</a>  |
+        <a title="Table of contents" href="../contents.html">Table of contents</a>  |
+        <a title="Global index" href="../genindex.html">Index</a>  |
+        <a title="Module index" href="../py-modindex.html">Modules</a>
+      </div>
+      <div class="nav">
+    &laquo; <a href="validators.html" title="Validators">previous</a> 
+     |
+    <a href="index.html" title="API Reference" accesskey="U">up</a>
+   |
+    <a href="../misc/index.html" title="Meta-documentation and miscellany">next</a> &raquo;</div>
+    </div>
+    
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="ref-views">
+            
+  <div class="section" id="s-module-django.views">
+<span id="s-built-in-views"></span><span id="module-django.views"></span><span id="built-in-views"></span><h1>Built-in Views<a class="headerlink" href="#module-django.views" title="Permalink to this headline">¶</a></h1>
+<p>Several of Django&#8217;s built-in views are documented in
+<a class="reference internal" href="../topics/http/views.html"><em>Writing views</em></a> as well as elsewhere in the documentation.</p>
+<div class="section" id="s-serving-files-in-development">
+<span id="serving-files-in-development"></span><h2>Serving files in development<a class="headerlink" href="#serving-files-in-development" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="django.views.static.serve">
+<tt class="descclassname">static.</tt><tt class="descname">serve</tt>(<em>request</em>, <em>path</em>, <em>document_root</em>, <em>show_indexes=False</em>)<a class="headerlink" href="#django.views.static.serve" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>There may be files other than your project&#8217;s static assets that, for
+convenience, you&#8217;d like to have Django serve for you in local development.
+The <a class="reference internal" href="#django.views.static.serve" title="django.views.static.serve"><tt class="xref py py-func docutils literal"><span class="pre">serve()</span></tt></a> view can be used to serve any directory
+you give it. (This view is <strong>not</strong> hardened for production use and should be
+used only as a development aid; you should serve these files in production
+using a real front-end webserver).</p>
+<p>The most likely example is user-uploaded content in <a class="reference internal" href="settings.html#std:setting-MEDIA_ROOT"><tt class="xref std std-setting docutils literal"><span class="pre">MEDIA_ROOT</span></tt></a>.
+<tt class="docutils literal"><span class="pre">django.contrib.staticfiles</span></tt> is intended for static assets and has no
+built-in handling for user-uploaded files, but you can have Django serve your
+<a class="reference internal" href="settings.html#std:setting-MEDIA_ROOT"><tt class="xref std std-setting docutils literal"><span class="pre">MEDIA_ROOT</span></tt></a> by appending something like this to your URLconf:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
+
+<span class="c"># ... the rest of your URLconf goes here ...</span>
+
+<span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">:</span>
+    <span class="n">urlpatterns</span> <span class="o">+=</span> <span class="n">patterns</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span>
+        <span class="n">url</span><span class="p">(</span><span class="s">r&#39;^media/(?P&lt;path&gt;.*)$&#39;</span><span class="p">,</span> <span class="s">&#39;django.views.static.serve&#39;</span><span class="p">,</span> <span class="p">{</span>
+            <span class="s">&#39;document_root&#39;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">MEDIA_ROOT</span><span class="p">,</span>
+        <span class="p">}),</span>
+   <span class="p">)</span>
+</pre></div>
+</div>
+<p>Note, the snippet assumes your <a class="reference internal" href="settings.html#std:setting-MEDIA_URL"><tt class="xref std std-setting docutils literal"><span class="pre">MEDIA_URL</span></tt></a> has a value of
+<tt class="docutils literal"><span class="pre">'/media/'</span></tt>. This will call the <a class="reference internal" href="#django.views.static.serve" title="django.views.static.serve"><tt class="xref py py-func docutils literal"><span class="pre">serve()</span></tt></a> view,
+passing in the path from the URLconf and the (required) <tt class="docutils literal"><span class="pre">document_root</span></tt>
+parameter.</p>
+<p>Since it can become a bit cumbersome to define this URL pattern, Django
+ships with a small URL helper function <a class="reference internal" href="urls.html#django.conf.urls.static.static" title="django.conf.urls.static.static"><tt class="xref py py-func docutils literal"><span class="pre">static()</span></tt></a>
+that takes as parameters the prefix such as <a class="reference internal" href="settings.html#std:setting-MEDIA_URL"><tt class="xref std std-setting docutils literal"><span class="pre">MEDIA_URL</span></tt></a> and a dotted
+path to a view, such as <tt class="docutils literal"><span class="pre">'django.views.static.serve'</span></tt>. Any other function
+parameter will be transparently passed to the view.</p>
+</div>
+</div>
+
+
+          </div>         
+        </div>
+      </div>
+      
+        
+          <div class="yui-b" id="sidebar">
+            
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../contents.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Built-in Views</a><ul>
+<li><a class="reference internal" href="#serving-files-in-development">Serving files in development</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>Browse</h3>
+  <ul>
+    
+      <li>Prev: <a href="validators.html">Validators</a></li>
+    
+    
+      <li>Next: <a href="../misc/index.html">Meta-documentation and miscellany</a></li>
+    
+  </ul>
+  <h3>You are here:</h3>
+  <ul>
+      <li>
+        <a href="../index.html">Django 1.5.4 documentation</a>
+        
+          <ul><li><a href="index.html">API Reference</a>
+        
+        <ul><li>Built-in Views</li></ul>
+        </li></ul>
+      </li>
+  </ul>  
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/ref/views.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+              <h3>Last update:</h3>
+              <p class="topless">Nov 05, 2013</p>
+          </div> 
+        
+      
+    </div>
+    
+    <div id="ft">
+      <div class="nav">
+    &laquo; <a href="validators.html" title="Validators">previous</a> 
+     |
+    <a href="index.html" title="API Reference" accesskey="U">up</a>
+   |
+    <a href="../misc/index.html" title="Meta-documentation and miscellany">next</a> &raquo;</div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>
