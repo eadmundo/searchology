@@ -1,9 +1,12 @@
 import os
-from celery import Celery
+from celery import Celery, signals
 from circus.client import CircusClient
+from zmqcontext import reset_zmq_context
 
 celery = Celery('tasks', broker=os.environ.get(
         'CELERY_BROKER_URI', 'redis://localhost:6379/0'))
+
+signals.worker_process_init.connect(reset_zmq_context)
 
 client = CircusClient()
 
