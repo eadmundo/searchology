@@ -17,6 +17,7 @@ def build(make=True):
     Execute build tasks.
     """
     venv.build(venv_path=venv_path)
+    do('sudo python -m nltk.downloader -d /usr/share/nltk_data punkt')
     # db.build()
     # db.populate()
 

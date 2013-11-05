@@ -1,4 +1,4 @@
-from nltk.tokenize.punkt import PunktSentenceTokenizer
+import nltk.data
 from nltk.tokenize import WhitespaceTokenizer
 from collections import OrderedDict
 from operator import itemgetter
@@ -33,7 +33,7 @@ class SearchQuerySnippet(object):
     @property
     def sentences(self):
         if not hasattr(self, '_sentences'):
-            tokenizer = PunktSentenceTokenizer()
+            tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
             sentences = tokenizer.tokenize(self.text)
             spans = tokenizer.span_tokenize(self.text)
             d = dict(zip(sentences, spans))

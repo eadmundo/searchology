@@ -1,6 +1,6 @@
 import rawes
 from flask import make_response, jsonify, request, abort
-from app.blueprints.api import blueprint
+from searchology.app.blueprints.api import blueprint
 from page_snippet import SearchQuerySnippet
 
 

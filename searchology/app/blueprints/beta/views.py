@@ -1,4 +1,4 @@
-from app.blueprints.beta import blueprint
+from searchology.app.blueprints.beta import blueprint
 
 
 @blueprint.route('/')

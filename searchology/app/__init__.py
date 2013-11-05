@@ -1,9 +1,9 @@
 import os
 from flask import Flask
-from app.extensions.database import database
-from app.extensions.toolbar import configure_toolbar
-from app.extensions.login import login_manager, current_user
-from app.extensions.oauth import oauth
+from searchology.app.extensions.database import database
+from searchology.app.extensions.toolbar import configure_toolbar
+from searchology.app.extensions.login import login_manager, current_user
+from searchology.app.extensions.oauth import oauth
 # from app.helpers import Pagination
 
 
@@ -47,7 +47,7 @@ def configure_blueprints(app, blueprints):
     """
     for blueprint in blueprints:
         # Import blueprint from view module
-        module = __import__('app.blueprints.%s.views' % blueprint[0], globals(), locals(), '*')
+        module = __import__('searchology.app.blueprints.%s.views' % blueprint[0], globals(), locals(), '*')
         app.register_blueprint(module.blueprint, url_prefix=blueprint[1])
 
 

@@ -1,5 +1,5 @@
 import unittest
-from crawl.spidology import SearchologySpider
+from searchology.crawl.spidology import SearchologySpider
 
 class TestSearchologySpider(unittest.TestCase):
 

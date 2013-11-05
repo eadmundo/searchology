@@ -1,4 +1,4 @@
-from app import create_app
+from searchology.app import create_app
 from flask import current_app
 from flask.ext.script import Shell, Manager, Server
 
@@ -9,7 +9,7 @@ def _make_shell_context():
     """
     Shell context: import helper objects here.
     """
-    from app.extensions.db import db
+    from searchology.app.extensions.db import db
     return dict(app=current_app, db=db)
 
 
