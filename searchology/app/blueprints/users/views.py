@@ -2,7 +2,7 @@ from flask import redirect, request, url_for, flash, render_template
 from flask.ext.login import current_user, login_user, logout_user
 from searchology.app.blueprints.users.forms import LoginForm
 from searchology.app.blueprints.users import blueprint
-from db.models import Users
+from searchology.db.models import Users
 
 
 @blueprint.route('/login/', methods=['GET', 'POST'])

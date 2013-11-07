@@ -1,6 +1,6 @@
 from flask.ext.login import LoginManager, current_user
 
-from db.models import Users
+from searchology.db.models import Users
 
 login_manager = LoginManager()
 login_manager.login_view = 'users.login'

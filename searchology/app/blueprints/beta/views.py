@@ -1,3 +1,4 @@
+from flask import render_template
 from searchology.app.blueprints.beta import blueprint
 
 
@@ -6,4 +7,4 @@ def beta_home():
     """"
     The beta home page
     """
-    return 'this is just the beta home page'
+    return render_template('beta.jinja')

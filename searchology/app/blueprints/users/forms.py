@@ -1,5 +1,5 @@
 from flask.ext.wtf import Form, TextField, HiddenField, PasswordField, Required, Optional, validators, ValidationError
-from db.models import Users
+from searchology.db.models import Users
 
 # Maximum length of the username & email address as specified by the database object. Used to
 # restrict the max length of the fields in the forms.
