@@ -31,6 +31,10 @@ class Users(Base):
 
     passphrase = property(get_passphrase, set_passphrase)
 
+    @property
+    def enabled(self):
+        return True
+
     def is_active(self):
         """
         Flask-Login helper.
@@ -56,14 +60,9 @@ class Users(Base):
         """
         return unicode(int(self.id))
 
-    @classmethod
-    def login(cls, username, passphrase):
-        "If the credentials match, return a user record"
-        user = cls.query.filter_by(username=username).first()
+    def passphrase_matches(self, passphrase):
         matches = lambda pw, hash: hash and bcrypt.hashpw(pw, hash) == hash
-        if user and matches(passphrase, user.passphrase_hash):
-            return user
-        return None
+        return matches(passphrase, self.passphrase_hash)
 
 
 class SiteSearch(Base):

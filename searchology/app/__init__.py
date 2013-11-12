@@ -58,6 +58,9 @@ def create_app(config=None, blueprints=None):
     app = Flask(__name__)
     app.config.from_pyfile('%s/config/default.py' % app.root_path)
 
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
+        'SQLALCHEMY_DATABASE_URI', 'postgresql://@/searchology')
+
     if config:
         app.config.from_pyfile(config)
     elif os.getenv('FLASK_CONFIG'):

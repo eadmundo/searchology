@@ -11,7 +11,7 @@ def create_watcher():
     client = CircusClient()
     client.send_message(
         'add',
-        cmd="/vagrant/env/bin/scrapy runspider crawl/spidology.py",
+        cmd="/vagrant/env/bin/scrapy runspider searchology/crawl/spidology.py",
         name="spidology",
         autostart=True
     )

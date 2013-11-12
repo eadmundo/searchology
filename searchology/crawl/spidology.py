@@ -2,7 +2,7 @@ from scrapy.contrib.spiders import CrawlSpider, Rule
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 from bs4 import BeautifulSoup
 from boilerpipe.extract import Extractor
-from searchology.db import models, session
+from searchology.db import models, session_scope
 import pyes
 import hashlib
 import atexit
@@ -20,7 +20,6 @@ class SearchologySpider(CrawlSpider):
     name = 'searchologyspider'
 
     def __init__(self, sid=None):
-        self.session = session
         self.sid = sid
         self.name = self.domain
         self.allowed_domains = [self.domain]
@@ -44,8 +43,9 @@ class SearchologySpider(CrawlSpider):
 
     @property
     def site_search(self):
-        return self.session.query(
-            models.SiteSearch).filter_by(id=self.sid).first()
+        with session_scope() as session:
+            return session.query(
+                models.SiteSearch).filter_by(id=self.sid).first()
 
     def parse_item(self, response):
         html = response.body
