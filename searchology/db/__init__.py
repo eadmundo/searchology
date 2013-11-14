@@ -18,7 +18,7 @@ def session_scope():
 
     .. code-block:: python
         from searchology.db import session_scope
-        with session_scope as session:
+        with session_scope() as session:
             objs = session.query(SomeModel).all()
         # do something with objs
     """

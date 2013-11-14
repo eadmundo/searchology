@@ -18,3 +18,4 @@ Flask-SQLAlchemy==0.16
 Flask-DebugToolbar==0.8.0
 Flask-OAuthlib==0.3.0
 beautifulsoup4==4.2.1
+itsdangerous==0.21

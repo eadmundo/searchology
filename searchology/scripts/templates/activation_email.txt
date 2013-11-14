@@ -1,0 +1,7 @@
+Hi,
+
+You've been invited to join the searcholo.gy beta - click the link below to try it out:
+
+{{ activation_link }}
+
+Thanks!

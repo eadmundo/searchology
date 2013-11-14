@@ -30,6 +30,7 @@ def test(tests='', with_blockage=False):
     print(cyan('Running tests...'))
     print ' --with-blockage' if with_blockage else ''
     do(
+        'export SQLALCHEMY_DATABASE_URI=postgresql://@/test_searchology && '
         'export SOMA_ENVIRONMENT=test && {}/bin/nosetests'
         ' --nologcapture --exclude-dir-file=\'.noseexclude\''
         ' --with-yanc --with-specplugin -q --nocapture{}'
