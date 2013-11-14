@@ -6,10 +6,12 @@ import argparse
 # importing these so we can patch them in the tests
 from __builtin__ import raw_input, print
 from jinja2 import Environment, FileSystemLoader
+from flask import url_for
 from sqlalchemy.exc import IntegrityError
 from itsdangerous import URLSafeSerializer
 from searchology.db import session_scope
 from searchology.db.models import Users, BetaUsers
+from searchology.app import create_app
 
 
 class Main(object):
@@ -41,8 +43,13 @@ class Main(object):
 
         self.add_beta_user()
 
+        app = create_app()
+
+        with app.test_request_context():
+            url = url_for('users.login', _external=True)
+
         print(self.template.render({
-            'activation_link': self.serialized_email
+            'activation_link': '{}{}'.format(url, self.serialized_email)
         }))
 
     @property

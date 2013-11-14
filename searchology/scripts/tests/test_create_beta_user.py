@@ -2,10 +2,12 @@ import unittest
 import argparse
 import factory
 import fudge
+from flask import url_for
 from itsdangerous import URLSafeSerializer
 from searchology.db import session_scope, engine
 from searchology.db.models import Users, BetaUsers, Base
 from searchology.scripts.create_beta_user import Main
+from searchology.app import create_app
 
 
 class UsersFactory(factory.Factory):
@@ -38,6 +40,7 @@ class TestCreateBetaUser(unittest.TestCase):
             session.add(inactive_user)
         self.parser = argparse.ArgumentParser()
         self.parser.add_argument('--email', type=str)
+        self.app = create_app()
 
     def tearDown(self):
         Base.metadata.drop_all(engine)
@@ -68,6 +71,8 @@ class TestCreateBetaUser(unittest.TestCase):
         with session_scope() as session:
             session.add(beta_user)
         email = 'different@email.com'
+        with self.app.test_request_context():
+            url = url_for('users.login', _external=True)
         (builtin_raw_input
             .expects_call()
             .returns('y'))
@@ -77,7 +82,7 @@ You've been invited to join the searcholo.gy beta - click the link below to try 
 
 {}
 
-Thanks!""".format(self.serializer.dumps(email))
+Thanks!""".format('{}{}'.format(url, self.serializer.dumps(email)))
         (print_function
             .expects_call()
             .with_args('email exists in beta_users table already...')
@@ -140,13 +145,15 @@ Thanks!""".format(self.serializer.dumps(email))
     @fudge.patch('searchology.scripts.create_beta_user.print')
     def test_email_text_is_output_correctly(self, print_function):
         m = self._get_main(['--email', 'new@email.com'])
+        with self.app.test_request_context():
+            url = url_for('users.login', _external=True)
         text = """Hi,
 
 You've been invited to join the searcholo.gy beta - click the link below to try it out:
 
 {}
 
-Thanks!""".format(self.serializer.dumps('new@email.com'))
+Thanks!""".format('{}{}'.format(url, self.serializer.dumps('new@email.com')))
         (print_function
             .expects_call()
             .with_args(text))
