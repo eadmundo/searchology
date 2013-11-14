@@ -100,7 +100,7 @@ class TestCreateBetaUser(unittest.TestCase):
         ).expects_call()
         m()
 
-    def test_serialized_email(self):
+    def test_email_can_be_serialized_and_deserialized(self):
         m = self._get_main(['--email', 'new@email.com'])
         self.assertEqual(
             self.serializer.loads(m.serialized_email),
