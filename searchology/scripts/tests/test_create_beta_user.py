@@ -8,11 +8,16 @@ from searchology.db.models import Users, BetaUsers, Base
 from searchology.scripts.create_beta_user import Main
 
 
-class UserFactory(factory.Factory):
+class UsersFactory(factory.Factory):
     FACTORY_FOR = Users
     username = 'existing'
     email = 'existing@email.com'
     activated = True
+
+
+class BetaUsersFactory(factory.Factory):
+    FACTORY_FOR = BetaUsers
+    email = 'different@email.com'
 
 
 class TestCreateBetaUser(unittest.TestCase):
@@ -20,9 +25,9 @@ class TestCreateBetaUser(unittest.TestCase):
     def setUp(self):
         self.serializer = URLSafeSerializer('test-secret')
         Base.metadata.create_all(engine)
-        active_user = UserFactory.create()
+        active_user = UsersFactory.create()
         active_user.set_passphrase('test')
-        inactive_user = UserFactory.create(
+        inactive_user = UsersFactory.create(
             username='different',
             email='different@email.com',
             activated=False
@@ -56,7 +61,32 @@ class TestCreateBetaUser(unittest.TestCase):
         m = self._get_main(['--email', 'different@email.com'])
         self.assertFalse(m.existing_user_is_activated)
 
-    def test_existing_inactive_user_raises_exception(self):
+    @fudge.patch('searchology.scripts.create_beta_user.raw_input')
+    @fudge.patch('searchology.scripts.create_beta_user.print')
+    def test_existing_inactive_user_can_have_new_activation_link(self, builtin_raw_input, print_function):
+        beta_user = BetaUsersFactory.create()
+        with session_scope() as session:
+            session.add(beta_user)
+        email = 'different@email.com'
+        (builtin_raw_input
+            .expects_call()
+            .returns('y'))
+        text = """Hi,
+
+You've been invited to join the searcholo.gy beta - click the link below to try it out:
+
+{}
+
+Thanks!""".format(self.serializer.dumps(email))
+        (print_function
+            .expects_call()
+            .with_args('email exists in beta_users table already...')
+            .next_call()
+            .with_args(text))
+        m = self._get_main(['--email', email])
+        m()
+
+    def test_existing_active_user_raises_exception(self):
         with self.assertRaises(Exception):
             m = self._get_main(['--email', 'existing@email.com'])
             m()

@@ -6,6 +6,7 @@ import argparse
 # importing these so we can patch them in the tests
 from __builtin__ import raw_input, print
 from jinja2 import Environment, FileSystemLoader
+from sqlalchemy.exc import IntegrityError
 from itsdangerous import URLSafeSerializer
 from searchology.db import session_scope
 from searchology.db.models import Users, BetaUsers
@@ -52,8 +53,11 @@ class Main(object):
         beta_user = BetaUsers(
             email=self.email
         )
-        with session_scope() as session:
-            session.add(beta_user)
+        try:
+            with session_scope() as session:
+                session.add(beta_user)
+        except IntegrityError:
+            print('email exists in beta_users table already...')
 
     def valid_choice(self, choice):
         return choice in ['y', 'Y', 'yes']
