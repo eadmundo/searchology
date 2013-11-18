@@ -31,6 +31,11 @@ def login():
     return render_template('login.jinja', form=form)
 
 
+@blueprint.route('/blah')
+def signup():
+    return render_template('blah.jinja')
+
+
 @blueprint.route('/logout/')
 def logout():
     """

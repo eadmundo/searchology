@@ -7,11 +7,13 @@ celery = Celery('tasks', broker=os.environ.get(
 
 
 @celery.task(name='tasks.create-watcher')
-def create_watcher():
+def create_watcher(sid=None):
     client = CircusClient()
     client.send_message(
         'add',
-        cmd="/vagrant/env/bin/scrapy runspider searchology/crawl/spidology.py",
+        cmd="scrapy runspider searchology/crawl/spidology.py -a {}".format(sid),
         name="spidology",
-        autostart=True
+        autostart=True,
+        respawn=False,
+        working_dir='/vagrant/'
     )

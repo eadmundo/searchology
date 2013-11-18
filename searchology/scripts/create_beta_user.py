@@ -17,7 +17,7 @@ from searchology.app import create_app
 class Main(object):
 
     def __init__(self, args):
-        self.email = args.email
+        self.email = args.email.lower()
         self.serializer = URLSafeSerializer(
             os.environ.get(
                 'ITSDANGEROUS_SECRET_KEY', 'test-secret'))
@@ -25,6 +25,7 @@ class Main(object):
             os.path.join(os.path.dirname(__file__), 'templates')
         ))
         self.template = self.jinja_env.get_template('activation_email.txt')
+        self.app = create_app()
 
     def __call__(self):
 
@@ -43,14 +44,18 @@ class Main(object):
 
         self.add_beta_user()
 
-        app = create_app()
-
-        with app.test_request_context():
-            url = url_for('users.login', _external=True)
-
         print(self.template.render({
-            'activation_link': '{}{}'.format(url, self.serialized_email)
+            'activation_link': self.activation_url
         }))
+
+    @property
+    def activation_url(self):
+        with self.app.test_request_context():
+            return url_for(
+                'beta.activation', 
+                code=self.serialized_email,
+                _external=True
+            )
 
     @property
     def serialized_email(self):

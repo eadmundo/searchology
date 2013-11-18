@@ -146,7 +146,7 @@ Thanks!""".format('{}{}'.format(url, self.serializer.dumps(email)))
     def test_email_text_is_output_correctly(self, print_function):
         m = self._get_main(['--email', 'new@email.com'])
         with self.app.test_request_context():
-            url = url_for('users.login', _external=True)
+            url = url_for('beta.activate', _external=True)
         text = """Hi,
 
 You've been invited to join the searcholo.gy beta - click the link below to try it out:

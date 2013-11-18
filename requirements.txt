@@ -1,6 +1,6 @@
 topia.termextract==1.1.0
 git+git://github.com/eadmundo/python-boilerpipe.git#egg=boilerpipe
-Scrapy==0.16.4
+Scrapy==0.20.0
 SQLAlchemy==0.8.1
 psycopg2==2.5
 alembic==0.5.0
@@ -19,3 +19,4 @@ Flask-DebugToolbar==0.8.0
 Flask-OAuthlib==0.3.0
 beautifulsoup4==4.2.1
 itsdangerous==0.21
+circus==0.10.0

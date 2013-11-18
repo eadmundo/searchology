@@ -2,7 +2,7 @@ class circus {
 
   package { 'circus':
     provider => 'pip',
-    ensure   => '0.6.0',
+    ensure   => '0.10.0',
     require => [Package['python-dev'], Package['libzmq-dev']],
   }
 
