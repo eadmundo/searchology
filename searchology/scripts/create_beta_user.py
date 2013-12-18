@@ -52,7 +52,7 @@ class Main(object):
     def activation_url(self):
         with self.app.test_request_context():
             return url_for(
-                'beta.activation', 
+                'beta.activation',
                 code=self.serialized_email,
                 _external=True
             )

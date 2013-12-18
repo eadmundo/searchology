@@ -61,6 +61,8 @@ def create_app(config=None, blueprints=None):
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
         'SQLALCHEMY_DATABASE_URI', 'postgresql://@/searchology')
 
+    app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
+
     if config:
         app.config.from_pyfile(config)
     elif os.getenv('FLASK_CONFIG'):

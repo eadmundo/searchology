@@ -3,16 +3,9 @@ from flask import render_template, redirect, url_for, abort, flash
 from itsdangerous import URLSafeSerializer, BadSignature
 from searchology.app.extensions.database import database as db
 from searchology.db.models import BetaUsers
-from searchology.app.blueprints.beta import blueprint
-
-from flask_wtf import Form
-from wtforms import TextField, HiddenField
-from wtforms.validators import DataRequired
-
-
-class BetaEmailForm(Form):
-    email = TextField('email', validators=[DataRequired()])
-    code = HiddenField('code', validators=[DataRequired()])
+from searchology.app.extensions.login import current_user
+from . import blueprint
+from .forms import BetaEmailForm
 
 
 @blueprint.route('/')
@@ -20,6 +13,8 @@ def beta_home():
     """"
     The beta home page
     """
+    if current_user.is_authenticated():
+        return redirect(url_for('users.dashboard'))
     return render_template('beta.jinja')
 
 @blueprint.route('/activate/<code>', methods=('GET', 'POST'))
@@ -48,7 +43,7 @@ def activation(code):
         # if they know which email it was sent to
         # then let them continue, otherwise let them try again
         if serializer.dumps(form.email.data.lower()) == form.code.data:
-            return redirect(url_for('users.signup'))
+            return redirect(url_for('users.signup', code=code))
         else:
             flash('That doesn\'t seem to be the right email address - try again?', 'error')
     return render_template('confirm_email.jinja', form=form, code=code)

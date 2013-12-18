@@ -1,18 +1,29 @@
 from scrapy.contrib.spiders import CrawlSpider, Rule
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
+from scrapy import log
 from bs4 import BeautifulSoup
+import os
+os.environ['JAVA_HOME'] = '/usr/lib/jvm/default-java'
 from boilerpipe.extract import Extractor
 from searchology.db import models, session_scope
 import pyes
 import hashlib
 import atexit
+from circus.client import CircusClient
 
 es = pyes.ES('localhost:9200')
+
+log.start(logfile='/tmp/spidology.log',loglevel='ERROR')
 
 
 @atexit.register
 def refresh_es():
     es.refresh()
+    client = CircusClient()
+    client.send_message(
+        'rm',
+        name="spidology"
+    )
 
 
 class SearchologySpider(CrawlSpider):

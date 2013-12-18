@@ -13,6 +13,7 @@ class Users(Base):
     id = Column(Integer, primary_key=True)
     username = Column(String(80), unique=True, nullable=False)
     email = Column(String(255), unique=True, nullable=False)
+    email_confirmed = Column(Boolean, default=False)
     passphrase_hash = Column(String(60), nullable=False)
     activated = Column(Boolean, default=False)
     date_activated = Column(DateTime, nullable=False, default=datetime.now())

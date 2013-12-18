@@ -33,4 +33,24 @@ class common {
       ensure => present,
     }
 
+    # create the spidology role
+    postgresql::role { 'spidology':
+      ensure => present,
+    }
+
+    # create a spidology user
+    group { 'spidology':
+      ensure => present,
+      system  => true,
+    }
+
+    user { 'spidology':
+      ensure  => present,
+      system  => true,
+      # home    => $dest,
+      shell   => '/bin/sh',
+      gid     => 'spidology',
+      require => Group['spidology'],
+    }
+
 }

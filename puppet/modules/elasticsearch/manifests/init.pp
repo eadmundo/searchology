@@ -1,8 +1,8 @@
 class elasticsearch {
 
-  $version = '0.20.6'
+  $version = '0.90.7'
   $java_package = 'openjdk-7-jre'
-  $download = "https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-0.20.6.tar.gz"
+  $download = "https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-${version}.tar.gz"
   $dest = "/opt/elasticsearch-${version}"
 
   package { "${java_package}":
@@ -39,6 +39,24 @@ class elasticsearch {
     require => Exec[download-elasticsearch]
   }
 
+  # file { $dest:
+  #   ensure => directory,
+  #   recurse => true,
+  #   owner   => 'elasticsearch',
+  #   group   => 'elasticsearch',
+  #   mode    => '0755',
+  #   require => User['elasticsearch'],
+  # }
+
+  # file { "$dest/config":
+  #   ensure => directory,
+  #   recurse => true,
+  #   owner   => 'elasticsearch',
+  #   group   => 'elasticsearch',
+  #   mode    => '0755',
+  #   require => File[$dest],
+  # }
+
   exec { "elasticsearch-${version}":
     command => "/bin/mv /tmp/elasticsearch-${version} ${dest}",
     cwd     => "/tmp",
@@ -65,7 +83,7 @@ class elasticsearch {
     owner   => 'elasticsearch',
     group   => 'elasticsearch',
     mode    => '0755',
-    require => User['elasticsearch'],
+    require => [User['elasticsearch'], Exec["elasticsearch-${version}"]],
   }
 
   file { "${dest}/config/elasticsearch.yml":
